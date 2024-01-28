@@ -461,7 +461,7 @@ void menu(Tienda &a, marquet Sub1[], int active){
 			break;
 		case 3:
 			system("cls");
-			cout << "Falta info!!" << endl;
+			cout << "Falta inf!!" << endl;
 			system("PAUSE");
 			break;
 		case 4:
