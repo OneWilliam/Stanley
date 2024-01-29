@@ -425,7 +425,6 @@ void Tienda::VerHistInventarios(){
 	{
 		cout << i+1 << ". Inventario " << setw(20) << (getInventarios())[i].getFecha();
 	}
-	
 }
 struct marquet{
 	int codigo;
@@ -464,11 +463,52 @@ void menu(Tienda &a){
 					system("PAUSE");
 					break;
 				case 2:
-					a.VerHistInventarios();
+					a.VerHistInventarios();	cout << endl;
 					system("PAUSE");
 					break;
 				case 3:
-					
+					system("cls");
+					cout<< "--------Productos--------"<<endl; 
+					cout<< "1. Ver Productos" << endl;
+					cout<< "2. Agregar Nuevo Producto" << endl;
+					cout<< "3. Quitar Producto" << endl;	
+					cout<< "4. Modificar Producto" << endl;
+					cout<< "5. Ordenar Productos" << endl;
+					cout<< "6. Buscar Productos" << endl;
+					cout<<endl<<">>> ";
+					cin >> opc;
+					switch (opc){
+						case 1:
+							(a.getInventarios())[(a.getInventarios()).size()-1].VerTodo();
+							system("PAUSE");
+							break;
+						case 2:
+							{
+							string nombre;
+							string tipo;
+							int cantidad;
+							float precio;
+							float ganancia;
+							cout << "Producto [" << (a.getInventarios())[(a.getInventarios()).size()-1].getProductos().size()+1 << "]" << endl;
+							cout << "Nombre: "; getline(cin >> ws, nombre);
+							cout << "Tipo: "; cin >> tipo;
+							cout << "Cantidad: "; cin >> cantidad;
+							cout << "Precio: "; cin >> precio;
+							cout << "Ganancia: "; cin >> ganancia;
+							Producto e(nombre, tipo, cantidad, precio, ganancia);
+							(a.getInventarios())[(a.getInventarios()).size()-1].AgregarProducto(e);
+							}
+							system("PAUSE");
+							break;
+						case 3:
+							cout << "";
+							system("PAUSE");
+							break;
+						case 4:
+
+						default:
+							break;
+						}
 					break;
 				case 4:
 
