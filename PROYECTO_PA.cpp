@@ -4,7 +4,8 @@
 #include <string>
 #include <windows.h>
 #include <fstream>
-
+#include <iomanip>
+#define tab setw(20) 
 using namespace std;
 
 class Producto{
@@ -28,7 +29,6 @@ class Producto{
 		void setGanancia(float);
 		bool operator== (Producto&);
 };
-
 Producto::Producto(string nom, string tip, int cant, float pre, float gan){
 	nombre = nom;
 	tipo = tip;
@@ -90,6 +90,7 @@ class Inventario{
 		vector<Producto> Productos;
 		string fecha;
 	public:
+		Inventario();
 		vector<Producto> getProductos();
 		void setFecha();
 		string getFecha();
@@ -97,8 +98,11 @@ class Inventario{
 		void AgregarProducto(string, int);
 		void QuitarProducto(string, int);
 		void VerTodo();
+		void Modificar();
 };
-
+Inventario::Inventario(){
+	fecha = "--/--/--";
+}
 vector<Producto> Inventario::getProductos(){
 	return Productos;
 }
@@ -143,14 +147,34 @@ void Inventario::QuitarProducto(string e, int a){
 void Inventario::VerTodo(){
 	cout<<"Inventario del " << getFecha() << endl;
 	cout<<"En el inventario tenemos: "<<endl<<endl;
-	for(int i = 0; i < Productos.size(); i++){
-		cout<<"Producto "<<i+1<<endl<<endl;
-		cout<<"Nombre: "<<Productos[i].getNombre()<<endl;
-		cout<<"Tipo: "<<Productos[i].getTipo()<<endl;
-		cout<<"Cantidad: "<<Productos[i].getCantidad()<<endl;
-		cout<<"Precio: "<<Productos[i].getPrecio()<<endl;
-		cout<<"Ganancia: "<<Productos[i].getGanancia()<<endl<<endl;
+	if (!Productos.empty())
+	{
+		for(int i = 0; i < Productos.size(); i++){
+			cout<<"Producto "<<i+1<<endl<<endl;
+			cout<<"Nombre: "<<Productos[i].getNombre()<<endl;
+			cout<<"Tipo: "<<Productos[i].getTipo()<<endl;
+			cout<<"Cantidad: "<<Productos[i].getCantidad()<<endl;
+			cout<<"Precio: "<<Productos[i].getPrecio()<<endl;
+			cout<<"Ganancia: "<<Productos[i].getGanancia()<<endl<<endl;
+		}
+	} else{
+		cout << "Aun no se han registrando productos..." << endl;
 	}
+	
+}
+
+void Inventario::Modificar(){
+	string inp = " <-- ";
+	cout<<"Inventario con fecha:" << getFecha() << inp; setFecha();
+	cout<<"En el inventario tenemos: "<<endl<<endl;
+		for(int i = 0; i < Productos.size(); i++){
+			cout<<"Producto "<<i+1<<endl<<endl;
+			cout<<"Nombre: "<<Productos[i].getNombre()<<endl;
+			cout<<"Tipo: "<<Productos[i].getTipo()<<endl;
+			cout<<"Cantidad: "<<Productos[i].getCantidad()<<endl;
+			cout<<"Precio: "<<Productos[i].getPrecio()<<endl;
+			cout<<"Ganancia: "<<Productos[i].getGanancia()<<endl<<endl;
+		}
 }
 
 class Flujo{
@@ -355,6 +379,7 @@ class Tienda{
 		string getNombre();
 		void setNombre(string);
 		void Info();
+		void VerHistInventarios();
 		
 };
 
@@ -395,7 +420,13 @@ void Tienda::agregarUsuario(Usuario e){
 void Tienda::Ventas(){
 	//Hay que imprimir toda la info de ventas aqui, los productos con sus cantidades :V
 }
-
+void Tienda::VerHistInventarios(){
+	for (int i = 0; i < Inventarios.size(); i++)
+	{
+		cout << i+1 << ". Inventario " << setw(20) << (getInventarios())[i].getFecha();
+	}
+	
+}
 struct marquet{
 	int codigo;
 	int almacen;
@@ -403,9 +434,7 @@ struct marquet{
 };
 
 void menu(Tienda &a){
-	//vector<Inventario> Inventarios = a.getInventarios();
 	int opc;
-	ofstream archivo;
 	do {
 	system("cls");
 	cout<<"Bienvenido al sistema de gestion de Tiendas, "<<a.getNombre();
@@ -414,12 +443,13 @@ void menu(Tienda &a){
 	cout<<endl<<"3. Flujo";
 	cout<<endl<<"4. Empleados";
 	cout<<endl<<"5. Informacion";
-	cout<<endl<<"6. Salir";
-	cout<< ">>> ";
+	cout<<endl<<"6. Salir ";
+	cout<<endl<< ">>> ";
 	cin >> opc;
 
 	switch (opc){
 		case 1:
+			system("cls");
 			cout<< "--------Inventario--------"<<endl;
 			cout<< "1. Ver Inventario Actual"<<endl;
 			cout<< "2. Ver Historial de Inventarios"<<endl;
@@ -430,22 +460,25 @@ void menu(Tienda &a){
 			cin >> opc;
 			switch (opc){
 				case 1:
-					(a.getInventarios())[(a.getInventarios()).size()].VerTodo();
+					(a.getInventarios())[(a.getInventarios()).size()-1].VerTodo();
+					system("PAUSE");
 					break;
 				case 2:
-			
+					a.VerHistInventarios();
+					system("PAUSE");
 					break;
 				case 3:
-
+					
 					break;
 				case 4:
 
 					break;
 				case 5:
-
 					break;
 		
 				default:
+					cout << "Elegir una opcion disponible [1-5]" << endl;
+					system("PAUSE");
 					break;
 				}
 			break;
@@ -460,7 +493,8 @@ void menu(Tienda &a){
 		case 6:
 			break;	
 		default:
-
+			cout << "Elegir una opcion disponible [1-6]" << endl;
+			system("PAUSE");
 			break;
 		}
 	} while (opc != 6);
