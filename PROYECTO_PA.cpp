@@ -83,25 +83,32 @@ bool Producto :: operator== (Producto& e){
 	}
 	return false;
 }
-//Producto == Producto
+
+
 class Inventario{
 	protected:
-		vector <Producto> Productos;
+		vector<Producto> Productos;
+		string fecha;
 	public:
-		Inventario(vector<Producto>);
 		vector<Producto> getProductos();
+		void setFecha();
+		string getFecha();
 		void AgregarProducto(Producto);
 		void AgregarProducto(string, int);
 		void QuitarProducto(string, int);
 		void VerTodo();
 };
 
-Inventario::Inventario(vector<Producto> e){
-	Productos = e;
-}
-
 vector<Producto> Inventario::getProductos(){
 	return Productos;
+}
+
+void Inventario::setFecha(){
+	cout<<"Ingrese la fecha en formato: ";
+}
+
+string Inventario::getFecha(){
+	return fecha;
 }
 
 void Inventario::AgregarProducto(Producto e){
@@ -134,6 +141,7 @@ void Inventario::QuitarProducto(string e, int a){
 }
 
 void Inventario::VerTodo(){
+	cout<<"Inventario del " << getFecha() << endl;
 	cout<<"En el inventario tenemos: "<<endl<<endl;
 	for(int i = 0; i < Productos.size(); i++){
 		cout<<"Producto "<<i+1<<endl<<endl;
@@ -330,55 +338,29 @@ void Usuario::quitarProductos(Producto e){
 	}
 }
 
-class Clientes{
-	protected:
-		vector<Usuario> Usuarios;
-	public:
-		Clientes();
-		Clientes(vector<Usuario>);
-		vector<Usuario> darUsuarios();
-		void agregarUsuario(Usuario);
-		void Ventas();
-};
-
-Clientes::Clientes(){
-}
-
-Clientes::Clientes(vector<Usuario> e){
-	Usuarios = e;
-}
-
-vector<Usuario> Clientes::darUsuarios(){
-	return Usuarios;
-}
-
-void Clientes::agregarUsuario(Usuario e){
-	Usuarios.push_back(e);
-}
-
-void Clientes::Ventas(){
-	//Hay que imprimir toda la info de ventas aqui, los productos con sus cantidades :V
-}
-
 class Tienda{
 	private:
 		string nombre;
-		Inventario *Inventario_;
+		vector<Inventario> Inventarios;
 		vector<Empleado> Empleados;
-		Flujo *Flujo_;
-		Clientes *Usuarios;
+		vector<Flujo> Flujos;
+		vector<Usuario> Usuarios;
 	public:
 		Tienda(string);
+		vector<Usuario> darUsuarios();
+		void agregarUsuario(Usuario);
+		void Ventas();
 		void AsignarEmpleado(Empleado);
-		void AsignarInventario(Inventario);
-		void AsignarFlujo(Flujo);
-		void AsignarClientes(Clientes);
+		vector<Inventario> getInventarios();
 		string getNombre();
 		void setNombre(string);
 		void Info();
+		
 };
 
 Tienda::Tienda(string nom){
+	Inventario e;
+	Inventarios.push_back(e);
 	nombre = nom;
 }
 
@@ -386,16 +368,8 @@ void Tienda::AsignarEmpleado(Empleado e){
 	Empleados.push_back(e);
 }
 
-void Tienda::AsignarInventario(Inventario e){
-	Inventario_ = new Inventario(e.getProductos());
-}
-
-void Tienda::AsignarFlujo(Flujo e){
-	Flujo_ = new Flujo(e.getDinero());
-}
-
-void Tienda::AsignarClientes(Clientes e){
-	Usuarios = new Clientes(e.darUsuarios());
+vector<Inventario> Tienda::getInventarios(){
+	return Inventarios;
 }
 
 string Tienda::getNombre(){
@@ -410,13 +384,123 @@ void Tienda::Info(){
 	//HAY QUE LLENAR ACA
 }
 
+vector<Usuario> Tienda::darUsuarios(){
+	return Usuarios;
+}
+
+void Tienda::agregarUsuario(Usuario e){
+	Usuarios.push_back(e);
+}
+
+void Tienda::Ventas(){
+	//Hay que imprimir toda la info de ventas aqui, los productos con sus cantidades :V
+}
+
 struct marquet{
 	int codigo;
 	int almacen;
 	string producto;
 };
 
+void menu(Tienda &a){
+	//vector<Inventario> Inventarios = a.getInventarios();
+	int opc;
+	ofstream archivo;
+	do {
+	system("cls");
+	cout<<"Bienvenido al sistema de gestion de Tiendas, "<<a.getNombre();
+	cout<<endl<<"1. Inventario";
+	cout<<endl<<"2. Usuarios";
+	cout<<endl<<"3. Flujo";
+	cout<<endl<<"4. Empleados";
+	cout<<endl<<"5. Informacion";
+	cout<<endl<<"6. Salir";
+	cout<< ">>> ";
+	cin >> opc;
 
+	switch (opc){
+		case 1:
+			cout<< "--------Inventario--------"<<endl;
+			cout<< "1. Ver Inventario Actual"<<endl;
+			cout<< "2. Ver Historial de Inventarios"<<endl;
+			cout<< "3. Modificar Inventario Actual"<<endl;
+			cout<< "4. Registrar Inventario"<<endl;
+			cout<< "5. Salir"<<	endl;
+			cout<<endl<< ">>> ";
+			cin >> opc;
+			switch (opc){
+				case 1:
+					(a.getInventarios())[(a.getInventarios()).size()].VerTodo();
+					break;
+				case 2:
+			
+					break;
+				case 3:
+
+					break;
+				case 4:
+
+					break;
+				case 5:
+
+					break;
+		
+				default:
+					break;
+				}
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;	
+		default:
+
+			break;
+		}
+	} while (opc != 6);
+	
+}
+
+int main(){
+	string nombre;
+	ofstream archiv1;
+	ifstream archiv2;
+	archiv2.open("datos.txt");
+	if (!archiv2.is_open()){
+		cout << "Error al leer archivo.dat\n";
+		exit(EXIT_FAILURE);
+	} else{
+		int b;
+		archiv2 >> b;
+		if (b == 2){
+			char aux;
+			archiv2.get(aux);
+			cout<<aux<<aux<<aux<<aux;
+			getline(archiv2, nombre);
+			archiv2.close();
+		} else {
+			archiv2.close();
+			archiv1.open("datos.txt");
+			cout<<"Bienvenido al sistema de gestion de Tienda.";
+			cout<<endl<<endl<<"      Ingrese el nombre de su tienda";
+			cout<<endl<<">>> ";
+			getline(cin >> ws, nombre);
+			archiv1 << 2 << " " << nombre << endl;
+			archiv1.close();
+		}
+		Tienda tienda1(nombre);
+		menu(tienda1);
+	}
+	return 0;
+}
+
+/*
 void menu(Tienda &a, marquet Sub1[], int active){
 	int opc;
 	ofstream archivo;
@@ -461,7 +545,7 @@ void menu(Tienda &a, marquet Sub1[], int active){
 			break;
 		case 3:
 			system("cls");
-			cout << "Falta inf!!" << endl;
+			cout << "Falta info!!" << endl;
 			system("PAUSE");
 			break;
 		case 4:
@@ -520,4 +604,4 @@ int main(){
 		}
 	}
 	return 0;
-}
+} */
