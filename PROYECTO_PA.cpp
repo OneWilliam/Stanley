@@ -409,7 +409,7 @@ void menu(Tienda &a){
 	do {
 	system("cls");
 	cout<<"Bienvenido al sistema de gestion de Tiendas, "<<a.getNombre();
-	cout<<endl<<"1. Inventario";
+	cout<<endl<<"1. Inventarios";
 	cout<<endl<<"2. Usuarios";
 	cout<<endl<<"3. Flujo";
 	cout<<endl<<"4. Empleados";
