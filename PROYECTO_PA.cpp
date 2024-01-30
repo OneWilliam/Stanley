@@ -5,7 +5,7 @@
 #include <windows.h>
 #include <fstream>
 #include <iomanip>
-#define tab setw(20) 
+#define tab setw(10) 
 using namespace std;
 
 class Producto{
@@ -16,6 +16,7 @@ class Producto{
 		float precio;
 		float ganancia;
 	public:
+		Producto();
 		Producto(string, string, int, float, float);
 		string getNombre();
 		string getTipo();
@@ -88,39 +89,37 @@ bool Producto :: operator== (Producto& e){
 class Inventario{
 	protected:
 		vector<Producto> Productos;
-		string fecha;
+		string fecha = " ";
 	public:
 		Inventario();
 		vector<Producto> getProductos();
-		void setFecha();
 		string getFecha();
-		void AgregarProducto(Producto);
+		void AgregarNuevoProducto(Producto);
 		void AgregarProducto(string, int);
 		void QuitarProducto(string, int);
 		void VerTodo();
-		void Modificar();
+		void Registrar();
 };
+
 Inventario::Inventario(){
-	fecha = "--/--/--";
-}
-vector<Producto> Inventario::getProductos(){
-	return Productos;
 }
 
-void Inventario::setFecha(){
-	cout<<"Ingrese la fecha en formato: ";
+vector<Producto> Inventario::getProductos(){
+	return Productos;
 }
 
 string Inventario::getFecha(){
 	return fecha;
 }
 
-void Inventario::AgregarProducto(Producto e){
+void Inventario::AgregarNuevoProducto(Producto e){
+	cout << "Size: "  << Productos.size();
 	Productos.push_back(e);
+	cout << "Size: "  << Productos.size();
 }
 
 void Inventario::AgregarProducto(string e, int a){
-	for(int i = 0; i < Productos.size(); i++){
+	for(int i = 0; i != Productos.size(); i++){
 		if (Productos[i].getNombre() == e){
 			Productos[i].setCantidad(Productos[i].getCantidad() + a);
 			return;
@@ -145,11 +144,13 @@ void Inventario::QuitarProducto(string e, int a){
 }
 
 void Inventario::VerTodo(){
-	cout<<"Inventario del " << getFecha() << endl;
+	if (getFecha() != " "){
+		cout<<"Inventario con fecha " << getFecha() << " <-- " << endl;
+	}
 	cout<<"En el inventario tenemos: "<<endl<<endl;
-	if (!Productos.empty())
-	{
-		for(int i = 0; i < Productos.size(); i++){
+	// if (!Productos.empty())
+	// {
+		for(int i = 0; i != Productos.size(); i++){
 			cout<<"Producto "<<i+1<<endl<<endl;
 			cout<<"Nombre: "<<Productos[i].getNombre()<<endl;
 			cout<<"Tipo: "<<Productos[i].getTipo()<<endl;
@@ -157,24 +158,15 @@ void Inventario::VerTodo(){
 			cout<<"Precio: "<<Productos[i].getPrecio()<<endl;
 			cout<<"Ganancia: "<<Productos[i].getGanancia()<<endl<<endl;
 		}
-	} else{
-		cout << "Aun no se han registrando productos..." << endl;
-	}
+	// } else{
+	// 	cout << "Aun no se han registrando productos..." << endl;
+	// }
 	
 }
 
-void Inventario::Modificar(){
-	string inp = " <-- ";
-	cout<<"Inventario con fecha:" << getFecha() << inp; setFecha();
-	cout<<"En el inventario tenemos: "<<endl<<endl;
-		for(int i = 0; i < Productos.size(); i++){
-			cout<<"Producto "<<i+1<<endl<<endl;
-			cout<<"Nombre: "<<Productos[i].getNombre()<<endl;
-			cout<<"Tipo: "<<Productos[i].getTipo()<<endl;
-			cout<<"Cantidad: "<<Productos[i].getCantidad()<<endl;
-			cout<<"Precio: "<<Productos[i].getPrecio()<<endl;
-			cout<<"Ganancia: "<<Productos[i].getGanancia()<<endl<<endl;
-		}
+void Inventario::Registrar(){
+	cout<<"\n Ingrese la fecha en formato DD/MM/AA: ";
+	cin>>fecha;
 }
 
 class Flujo{
@@ -426,11 +418,6 @@ void Tienda::VerHistInventarios(){
 		cout << i+1 << ". Inventario " << setw(20) << (getInventarios())[i].getFecha();
 	}
 }
-struct marquet{
-	int codigo;
-	int almacen;
-	string producto;
-};
 
 void menu(Tienda &a){
 	int opc;
@@ -445,7 +432,7 @@ void menu(Tienda &a){
 	cout<<endl<<"6. Salir ";
 	cout<<endl<< ">>> ";
 	cin >> opc;
-
+	
 	switch (opc){
 		case 1:
 			system("cls");
@@ -496,13 +483,17 @@ void menu(Tienda &a){
 							cout << "Precio: "; cin >> precio;
 							cout << "Ganancia: "; cin >> ganancia;
 							Producto e(nombre, tipo, cantidad, precio, ganancia);
-							(a.getInventarios())[(a.getInventarios()).size()-1].AgregarProducto(e);
+							
+							(a.getInventarios())[(a.getInventarios()).size()-1].AgregarNuevoProducto(e);
 							}
-							system("PAUSE");
+							
+							cout << "tamano: " << ((a.getInventarios())[(a.getInventarios()).size()-1].getProductos()).size() << endl;
+							system("\nPAUSE");
 							break;
 						case 3:
 							cout << "";
-							system("PAUSE");
+							system("\nPAUSE");
+							
 							break;
 						case 4:
 
