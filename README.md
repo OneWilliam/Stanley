@@ -8,7 +8,7 @@
 ### 🗿Principales colabores: 
   - @StillTheBest1973
   - @OneWilliam
-  - Duilio
+  - @ddzapanaz
 
 ### Stanley
   Sistema de tiendas para facilitar la automatización y gestión de registros habitual.
