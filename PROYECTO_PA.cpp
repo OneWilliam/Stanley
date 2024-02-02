@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iomanip>
 #define tab setw(10) 
+#define tab_nombre setw(20)
+
 using namespace std;
 
 class Producto{
@@ -18,6 +20,7 @@ class Producto{
 	public:
 		Producto();
 		Producto(string, string, int, float, float);
+		string get(string);
 		string getNombre();
 		string getTipo();
 		int getCantidad();
@@ -30,12 +33,35 @@ class Producto{
 		void setGanancia(float);
 		bool operator== (Producto&);
 };
+
+Producto::Producto(){
+	nombre = "";
+	tipo = "";
+	cantidad = 0;
+	precio = 0;
+	ganancia = 0;
+}
+
 Producto::Producto(string nom, string tip, int cant, float pre, float gan){
 	nombre = nom;
 	tipo = tip;
 	cantidad = cant;
 	precio = pre;
 	ganancia = gan;
+}
+
+string Producto::get(string e){
+	if (e == "nombre")
+		return nombre;
+	if (e == "tipo")
+		return tipo;
+	if (e == "cantidad") 
+		return to_string(cantidad);
+	if (e == "precio")
+		return to_string(precio);
+	if (e == "ganancia")
+		return to_string(ganancia);
+	return "NOTHING";
 }
 
 string Producto::getNombre(){
@@ -85,7 +111,6 @@ bool Producto :: operator== (Producto& e){
 	return false;
 }
 
-
 class Inventario{
 	protected:
 		vector<Producto> Productos;
@@ -117,9 +142,7 @@ string Inventario::getFecha(){
 }
 
 void Inventario::AgregarNuevoProducto(Producto e){
-	cout << "Size: "  << Productos.size();
 	Productos.push_back(e);
-	cout << "Size: "  << Productos.size();
 }
 
 void Inventario::AgregarProducto(string e, int a){
@@ -153,85 +176,21 @@ void Inventario::VerTodo(){
 	}
 	cout<<"En el inventario tenemos: "<<endl<<endl;
 	if (!Productos.empty())
+	
 	{
+		cout << "     " << left << tab_nombre <<  "NOMBRE" << tab  <<  "TIPO" << tab << "CANTIDAD" << tab << "PRECIO" << tab << "GANANCIA" << endl;
 		for(int i = 0; i != Productos.size(); i++){
-			cout<<"Producto ["<<i+1<<"]"<<endl<<endl;
-			cout<<"Nombre: "<<Productos[i].getNombre()<<endl;
-			cout<<"Tipo: "<<Productos[i].getTipo()<<endl;
-			cout<<"Cantidad: "<<Productos[i].getCantidad()<<endl;
-			cout<<"Precio: "<<Productos[i].getPrecio()<<endl;
-			cout<<"Ganancia: "<<Productos[i].getGanancia()<<endl<<endl;
+			cout << "[" << i  << "]  "<< left << tab_nombre << Productos[i].getNombre() << tab << Productos[i].getTipo() << tab << Productos[i].getCantidad() << tab << Productos[i].getPrecio() << tab << Productos[i].getGanancia() << endl;
 		}
-	} else{
+		
+	} else {
 	cout << "Aun no se han registrando productos..." << endl;
 	}
-	
 }
 
 void Inventario::Registrar(){
 	cout<<"\n Ingrese la fecha en formato DD/MM/AA: ";
 	cin>>fecha;
-}
-
-class Flujo{
-	private:
-		float Dinero;
-	public:
-		Flujo();
-		Flujo(float);
-		void TodoFlujo();
-		void Inversion(string, int);
-		void Inversion();
-		void Ventas();
-		void GastoEmpleados();
-		void GastoEmpleados(string);
-		float getDinero();
-		void setDinero(float);
-		void sumarDinero(float);
-};
-
-Flujo::Flujo(){
-	Dinero = 0;
-}
-
-Flujo::Flujo(float e){
-	Dinero = e;
-}
-
-void Flujo::TodoFlujo(){
-	
-}
-
-void Flujo::Inversion(){
-	
-}
-
-void Flujo::Inversion(string e, int a){
-	
-}
-
-void Flujo::Ventas(){
-	
-}
-
-void Flujo::GastoEmpleados(){
-	
-}
-
-void Flujo::GastoEmpleados(string e){
-	
-}
-
-float Flujo::getDinero(){
-	return Dinero;
-}
-
-void Flujo::setDinero(float e){
-	Dinero = e;
-}
-
-void Flujo::sumarDinero(float e){
-	Dinero += e;
 }
 
 class Empleado{
@@ -279,100 +238,18 @@ void Empleado::setSueldo(float e){
 	Sueldo = e;
 }
 
-class Usuario{
-	private:
-		string nombre;
-		string contrasena;
-		string correo;
-		vector<Producto> adquiridos;
-	public:
-		Usuario(string, string, string);
-		string getNombre();
-		string getContrasena();
-		string getCorreo();
-		vector<Producto> getProductos();
-		void setNombre(string);
-		void setContrasena(string);
-		void setCorreo(string);
-		void agregarProductos(Producto);
-		void quitarProductos(Producto);
-};
-
-Usuario::Usuario(string e,string d ,string a){
-	nombre = e;
-	contrasena = d;
-	correo = a;
-}
-
-string Usuario::getNombre(){
-	return nombre;
-}
-
-string Usuario::getContrasena(){
-	return contrasena;
-}
-
-string Usuario::getCorreo(){
-	return correo;
-}
-
-vector<Producto> Usuario::getProductos(){
-	return adquiridos;
-}
-
-void Usuario::setNombre(string e){
-	nombre = e;
-}
-
-void Usuario::setContrasena(string e){
-	contrasena = e;
-}
-
-void Usuario::setCorreo(string e){
-	correo = e;
-}
-
-void Usuario::agregarProductos(Producto e){
-	for (int i = 0; i < adquiridos.size(); i++){
-		if (adquiridos[i] == e){
-			adquiridos[i].setCantidad(adquiridos[i].getCantidad() + e.getCantidad());
-			return;
-		}
-	}
-	adquiridos.push_back(e);
-}
-
-void Usuario::quitarProductos(Producto e){
-	for (int i = 0; i < adquiridos.size(); i++){
-		if (adquiridos[i] == e){
-			if(adquiridos[i].getCantidad() < e.getCantidad()){
-				cout<<"Solo compraste "<<adquiridos[i].getCantidad()<<" unidades de este producto, vuelve a intentar."<<endl<<endl;
-			} else {
-				if(adquiridos[i].getCantidad() == e.getCantidad()){
-					adquiridos.erase(adquiridos.begin()+i); 
-				} else {
-					adquiridos[i].setCantidad(adquiridos[i].getCantidad() - e.getCantidad());
-				}
-			}
-		}
-	}
-}
-
 class Tienda{
 	private:
 		string nombre;
 		vector<Inventario> Inventarios;
 		vector<Empleado> Empleados;
-		vector<Flujo> Flujos;
-		vector<Usuario> Usuarios;
 	public:
 		Tienda(string);
-		vector<Usuario> darUsuarios();
-		void agregarUsuario(Usuario);
-		void Ventas();
 		void AsignarEmpleado(Empleado);
 		vector<Inventario> getInventarios();
 		void setInventarios(vector <Inventario>);
+		Inventario getInventarioActual();
+		void setInventarioActual(Inventario);
 		string getNombre();
 		void setNombre(string);
 		void Info();
@@ -397,6 +274,14 @@ void Tienda::setInventarios(vector <Inventario> Nuevo){
 	Inventarios = Nuevo;
 }
 
+Inventario Tienda::getInventarioActual(){
+	return Inventarios.back();
+}
+
+void Tienda::setInventarioActual(Inventario e){
+	Inventarios[Inventarios.size() - 1] = e;
+}
+
 string Tienda::getNombre(){
 	return nombre;
 }
@@ -409,17 +294,6 @@ void Tienda::Info(){
 	//HAY QUE LLENAR ACA
 }
 
-vector<Usuario> Tienda::darUsuarios(){
-	return Usuarios;
-}
-
-void Tienda::agregarUsuario(Usuario e){
-	Usuarios.push_back(e);
-}
-
-void Tienda::Ventas(){
-	//Hay que imprimir toda la info de ventas aqui, los productos con sus cantidades :V
-}
 void Tienda::VerHistInventarios(){
 	for (int i = 0; i < Inventarios.size(); i++)
 	{
@@ -437,17 +311,53 @@ void editarInventario(Tienda &a, T &e){
 	a.setInventarios(nuevo);
 }
 
+void Ordenador (int a, vector<Producto> &e){																										
+	string k;
+	Producto aux;
+	if(a == 1) k = "nombre";
+	else if(a == 2) k = "tipo";
+	else if(a == 3) k = "cantidad";
+	else if(a == 4) k = "precio";
+	else if(a == 5) k = "ganancia";
+	for (int i = 1; i < e.size(); i++){
+		for (int j = 1; j < e.size() - i; j++){
+			if (e[j-1].get(k) > e[j].get(k)){
+				aux = e[j];
+				e[j] = e[j-1];
+				e[j-1] = aux; 
+			}
+		}
+	}
+}
+
+void Busqueda (int a, vector<Producto> &e){																										
+	string k;
+	Producto aux;
+	if(a == 1) k = "nombre";
+	else if(a == 2) k = "tipo";
+	else if(a == 3) k = "cantidad";
+	else if(a == 4) k = "precio";
+	else if(a == 5) k = "ganancia";
+	for (int i = 1; i < e.size(); i++){
+		for (int j = 1; j < e.size() - i; j++){
+			if (e[j-1].get(k) > e[j].get(k)){
+				aux = e[j];
+				e[j] = e[j-1];
+				e[j-1] = aux; 
+			}
+		}
+	}
+}
+
 void menu(Tienda &a){
 	int opc;
 	do {
 	system("cls");
 	cout<<"Bienvenido al sistema de gestion de Tiendas, "<<a.getNombre();
 	cout<<endl<<"1. Inventarios";
-	cout<<endl<<"2. Usuarios";
-	cout<<endl<<"3. Flujo";
-	cout<<endl<<"4. Empleados";
-	cout<<endl<<"5. Informacion";
-	cout<<endl<<"6. Salir ";
+	cout<<endl<<"2. Empleados";
+	cout<<endl<<"3. Informacion";
+	cout<<endl<<"4. Salir ";
 	cout<<endl<< ">>> ";
 	cin >> opc;
 	
@@ -480,6 +390,7 @@ void menu(Tienda &a){
 					cout<< "4. Modificar Producto" << endl;
 					cout<< "5. Ordenar Productos" << endl;
 					cout<< "6. Buscar Productos" << endl;
+					cout<< "7. Salir" << endl;
 					cout<<endl<<">>> ";
 					cin >> opc;
 					switch (opc){
@@ -505,19 +416,70 @@ void menu(Tienda &a){
 							}
 							system("\nPAUSE");
 							break;
-						case 3:/*{
-						// 	string nom; int cant;
-						// 	a.getInventarios().back().VerTodo();
-						// 	cout << "Que producto desea quitar: ";
-						// 	getline(cin >> ws, nom);
-						// 	cout << "Que cantidades del producto desea quitar: ";
-						// 	cin >> cant;
-						// 	a.getInventarios().back().QuitarProducto(nom, cant);
-						// 	}*/
+						case 3:
+						{
+							Inventario Cambio = a.getInventarios().back();
+							string nom; int cant;
+						 	Cambio.VerTodo();
+						 	cout << "Que producto desea quitar: ";
+						 	getline(cin >> ws, nom);
+						 	cout << "Que cantidades del producto desea quitar: ";
+						 	cin >> cant;
+							Cambio.QuitarProducto(nom, cant);
+							a.setInventarioActual(Cambio);
+						}
 							system("\nPAUSE");
 							break;
 						case 4:
+							
+							system("\nPAUSE");
+							break;
+						case 5:{
+							int criterio;
+							WAZA:
+							system("cls");
+							cout << "Segun que criterio desea ordenar los productos?\n" << endl;
+							cout << "1. Ordenar segun Nombre\n" << endl;
+							cout << "2. Ordenar segun Tipo\n" << endl;
+							cout << "3. Ordenar segun Cantidad\n" << endl;
+							cout << "4. Ordenar segun Precio\n" << endl;
+							cout << "5. Ordenar segun Ganancia\n\n" << endl;
+							cout << ">>> "; cin >> criterio;
+							if(criterio > 0 && criterio < 6){
+							vector<Producto> e = a.getInventarioActual().getProductos();
+							Ordenador(criterio, e);
+							Inventario f = a.getInventarioActual();
+							f.setProductos(e);
+							a.setInventarioActual(f);
+							}else {
+								cout << "Eliga una opcion disponible\n\n";
+								system("PAUSE");
+								goto WAZA;
+							}
+							cout << "Ordenando..." << endl;
+								for (int j = 0; j < 22; j++){
+									system("cls");
+									cout << "-----------------------------------------\n";
+									for(int i = 0; i < j; i++){
+										cout << "XD";
+										}
+									cout << "\n-----------------------------------------";
+									Sleep(300);
+									}
+						}
+							system("cls");
+							cout << "Se ordeno correctamente!!" << endl;
+							a.getInventarios().back().VerTodo();
+							system("\nPAUSE");
+							break;
+						case 6:
+							
+							system("\nPAUSE");
+							break;
+						case 7:
 
+							system("\nPAUSE");
+							break;
 						default:
 							break;
 						}
@@ -526,6 +488,7 @@ void menu(Tienda &a){
 
 					break;
 				case 5:
+					
 					break;
 		
 				default:
@@ -537,13 +500,10 @@ void menu(Tienda &a){
 		case 2:
 			break;
 		case 3:
+			
 			break;
 		case 4:
 			break;
-		case 5:
-			break;
-		case 6:
-			break;	
 		default:
 			cout << "Elegir una opcion disponible [1-6]" << endl;
 			system("PAUSE");
