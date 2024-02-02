@@ -1,3 +1,4 @@
-Inventario 0 12/15/13 2
-sfg 16 13 15 sfag 
-sgd 16 13 16 adf 
+Inventario 0 12/13/2024 2
+sfg 16 15 13 dfs 
+asfg 16 13 18 sdg 
+x

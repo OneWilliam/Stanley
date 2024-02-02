@@ -118,7 +118,7 @@ void Producto :: verProducto(int i){
 }
 
 class Inventario{
-	protected:
+	private:
 		vector<Producto> Productos;
 		string fecha;
 	public:
@@ -135,7 +135,7 @@ class Inventario{
 };
 
 Inventario::Inventario(){
-	fecha = " ";
+	fecha = "Actual";
 }
 
 vector<Producto> Inventario::getProductos(){
@@ -183,8 +183,8 @@ void Inventario::QuitarProducto(string e, int a){
 }
 
 void Inventario::VerTodo(){
-	if (getFecha() != " "){
-		cout<<"Inventario con fecha " << getFecha() << " <-- " << endl;
+	if (fecha != "Actual"){
+		cout<<"Inventario con fecha " << fecha << " <-- " << endl;
 	} else {
 		cout<<"Inventario Actual...\n\n";
 	}
@@ -194,7 +194,6 @@ void Inventario::VerTodo(){
 		for(int i = 0; i != Productos.size(); i++){
 			cout << "[" << i + 1 << "]  "<< left << tab_nombre << Productos[i].getNombre() << tab << Productos[i].getTipo() << tab << Productos[i].getCantidad() << tab << Productos[i].getPrecio() << tab << Productos[i].getGanancia() << endl;
 		}
-		
 	} else {
 		cout << "Aun no se han registrando productos..." << endl;
 	}
@@ -311,9 +310,11 @@ void Tienda::Info(){
 }
 
 void Tienda::VerHistInventarios(){
-	for (int i = Inventarios.size(); i > -1; i--)
+	int contador = 0;
+	for (int i = Inventarios.size()-1; i > -1; i--)
 	{
-		cout << i+1 << ". Inventario " << setw(20) << (getInventarios())[i].getFecha();
+		contador++;
+		cout << contador << ". Inventario " << left <<setw(20) << Inventarios[i].getFecha();
 		cout << endl;
 	}
 }
@@ -404,7 +405,7 @@ void menu(Tienda &a){
 			cin >> opc;
 			switch (opc){
 				case 1:
-					(a.getInventarios())[(a.getInventarios()).size()-1].VerTodo();
+					a.getInventarios().back().VerTodo();
 					system("PAUSE");
 					break;
 				case 2:
@@ -472,11 +473,11 @@ void menu(Tienda &a){
 							cout << ">>> "; cin >> criterio;
 
 							if(criterio > 0 && criterio < 6){
-							vector<Producto> e = a.getInventarioActual().getProductos();
-							Ordenador(criterio, e);
-							Inventario f = a.getInventarioActual();
-							f.setProductos(e);
-							a.setInventarioActual(f);
+								vector<Producto> e = a.getInventarioActual().getProductos();
+								Ordenador(criterio, e);
+								Inventario f = a.getInventarioActual();
+								f.setProductos(e);
+								a.setInventarioActual(f);
 							} else {
 								cout << "Eliga una opcion disponible\n\n";
 								system("PAUSE");
@@ -492,8 +493,8 @@ void menu(Tienda &a){
 										}
 									cout << "\n-----------------------------------------";
 									Sleep(300);
-									}
-						}
+								}
+							}
 							system("cls");
 							cout << "Se ordeno correctamente!!" << endl;
 							a.getInventarios().back().VerTodo();
@@ -561,7 +562,9 @@ void menu(Tienda &a){
 			break;
 		}
 	} while (opc != 4);
-	
+	ofstream archiv2;
+	archiv2.open("inventario.txt", ios::app);
+	archiv2<<"x";
 }
 
 int main(){
@@ -593,36 +596,48 @@ int main(){
 		}
 		Tienda tienda1(nombre);
 		vector<Inventario> Lector;
-		archiv2.open("datos.txt");
-		while (archiv2.eof()){
-			Inventario e;
-			string temp;
-			int indice;
-			string fecha;
-			int cantidad;
-			archiv2>>temp>>indice>>fecha>>cantidad;
-			e.setFecha(fecha);
-			vector<Producto> Lector_P;
-			for (int i = 0; i < cantidad ; i ++){
-				Producto a;
-				string tipo;
-				string nombre;
+		Inventario ultimo;
+		archiv2.open("inventario.txt");
+		string temp;
+		bool leer = true;
+		while(leer){
+			archiv2>>temp;
+			if (!(temp == "x")){
+				Inventario e;
+				int indice;
+				string fecha;
 				int cantidad;
-				float precio;
-				float ganancia;
-				char c;
-				archiv2>>tipo>>cantidad>>precio>>ganancia;
-				archiv2.get(c);
-				getline(archiv2, nombre);
-				a.setNombre(nombre);
-				a.setTipo(tipo);
-				a.setPrecio(precio);
-				a.setCantidad(cantidad);
-				a.setGanancia(ganancia);
-				Lector_P.push_back(a);
+				archiv2>>indice>>fecha>>cantidad;
+				e.setFecha(fecha);
+				vector<Producto> Lector_P;
+				system("PAUSE");
+				for (int i = 0; i < cantidad ; i ++){
+					Producto a;
+					string tipo;
+					string nombre;
+					int cantidad;
+					float precio;
+					float ganancia;
+					char c;
+					archiv2>>tipo>>cantidad>>precio>>ganancia;
+					archiv2.get(c);
+					getline(archiv2, nombre);
+					a.setNombre(nombre);
+					a.setTipo(tipo);
+					a.setPrecio(precio);
+					a.setCantidad(cantidad);
+					a.setGanancia(ganancia);
+					Lector_P.push_back(a);
+				}
+				e.setProductos(Lector_P);
+				Lector.push_back(e);
+			} else {
+				leer = false;
 			}
-			e.setProductos(Lector_P);
-			Lector.push_back(e);
+		}
+		if (Lector.empty()){
+			Inventario a;
+			Lector.push_back(a);
 		}
 		tienda1.setInventarios(Lector);
 		menu(tienda1);
