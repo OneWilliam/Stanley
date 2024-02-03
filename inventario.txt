@@ -1,4 +1,6 @@
-Inventario 0 12/13/2024 2
-sfg 16 15 13 dfs 
-asfg 16 13 18 sdg 
+Inventario 0 Actual 4
+Soda 4 2 1 Cola Kr 
+Soda 50 3 1 Coca Cola 
+Soda 4 5 1 Inka Cola 
+masticable 3 1 0 Chicle boom 
 x

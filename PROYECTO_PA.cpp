@@ -190,9 +190,9 @@ void Inventario::VerTodo(){
 	}
 	if (!Productos.empty()) {
 		cout<<"En el inventario tenemos: "<<endl<<endl;
-		cout << "     " << left << tab_nombre <<  "NOMBRE" << tab  <<  "TIPO" << tab << "CANTIDAD" << tab << "PRECIO" << tab << "GANANCIA" << endl;
+		cout << "     " << left << tab_nombre <<  "NOMBRE" << tab_nombre  <<  "TIPO" << tab << "CANTIDAD" << tab << "PRECIO" << tab << "GANANCIA" << endl;
 		for(int i = 0; i != Productos.size(); i++){
-			cout << "[" << i + 1 << "]  "<< left << tab_nombre << Productos[i].getNombre() << tab << Productos[i].getTipo() << tab << Productos[i].getCantidad() << tab << Productos[i].getPrecio() << tab << Productos[i].getGanancia() << endl;
+			cout << "[" << i + 1 << "]  "<< left << tab_nombre << Productos[i].getNombre() << tab_nombre << Productos[i].getTipo() << tab << Productos[i].getCantidad() << tab << Productos[i].getPrecio() << tab << Productos[i].getGanancia() << endl;
 		}
 	} else {
 		cout << "Aun no se han registrando productos..." << endl;
@@ -257,8 +257,12 @@ class Tienda{
 	public:
 		Tienda(string);
 		void AsignarEmpleado(Empleado);
+		void DespedirEmpleado(int);
+		void VerEmpleados();
 		vector<Inventario> getInventarios();
 		void setInventarios(vector <Inventario>);
+		vector<Empleado> getEmpleados();
+		void setEmpleados(vector<Empleado>);
 		Inventario getInventarioActual();
 		void setInventarioActual(Inventario);
 		string getNombre();
@@ -278,12 +282,30 @@ Tienda::Tienda(string nom){
 void Tienda::AsignarEmpleado(Empleado e){
 	Empleados.push_back(e);
 }
-
-vector<Inventario> Tienda::getInventarios(){
+void Tienda::DespedirEmpleado(int a){
+	Empleados.erase(Empleados.begin() + a);
+}
+void Tienda::VerEmpleados(){
+	cout << "---------------------------------------------------------" << endl;
+	cout << "    " << left << tab_nombre << "NOMBRE" << tab_nombre << "NIVEL" << tab << "SUELDO" << endl;
+	cout << "---------------------------------------------------------" << endl;
+	for (int i = 0; i < Empleados.size(); i++){
+		cout << i << "  " << left << tab_nombre <<  Empleados[i].getNombre() << tab_nombre << Empleados[i].getNivel() << tab << Empleados[i].getSueldo() << endl;
+	}	
+}
+vector<Inventario> Tienda::getInventarios(){	
 	return Inventarios;
 }
 void Tienda::setInventarios(vector <Inventario> Nuevo){
 	Inventarios = Nuevo;
+}
+
+vector<Empleado> Tienda::getEmpleados(){
+	return Empleados;
+}
+
+void Tienda::setEmpleados(vector<Empleado> e){
+	Empleados = e;
 }
 
 Inventario Tienda::getInventarioActual(){
@@ -370,13 +392,17 @@ void Ordenador (int a, vector<Producto> &e){
 
 int Busqueda (int a, string c, vector<Producto> &e){																										
 	string k;
+	int encontrados = 0;
 	if(a == 1) k = "nombre";
 	else if(a == 2) k = "tipo";
 	for (int i = 0; i < e.size(); i++){
 		if (e[i].get(k) == c){
-			return i;
+			encontrados++;
+			e[i].verProducto(i);
 		}
 	}
+	if(encontrados > 0)
+		return 1;
 	return -1;
 }
 
@@ -489,7 +515,7 @@ void menu(Tienda &a){
 									system("cls");
 									cout << "-----------------------------------------\n";
 									for(int i = 0; i < j; i++){
-										cout << "XD";
+										cout << "XX";
 										}
 									cout << "\n-----------------------------------------";
 									Sleep(300);
@@ -512,16 +538,12 @@ void menu(Tienda &a){
 							cout << ">>> "; cin >> criterio;
 							if(criterio > 0 && criterio < 3){
 								vector<Producto> e = a.getInventarioActual().getProductos();
-								cout << "Escriba el elemento a buscar segun el criterio elegido: "; cin >> c;
+								cout << "Escriba el elemento a buscar segun el criterio elegido: "; getline(cin >> ws, c);
 								int indice = Busqueda(criterio, c, e);
 								if (indice == -1){
 									cout<<"No se encontro ninguna similitud\n\n";	
-								} else {
-									cout << "\n\nUsted esta buscando el Producto "<<indice + 1<<", mostrando...\n\n";
-									e[indice+1].verProducto(indice+1);
-									cout << endl;
-									system("PAUSE");
 								}
+								system("PAUSE");
 							} else {
 								cout << "Eliga una opcion disponible\n\n";
 								system("PAUSE");
@@ -546,7 +568,48 @@ void menu(Tienda &a){
 					break;
 				}
 			break;
-		case 2:
+		case 2:{
+			int tap;
+			system("cls");
+			cout << "-------Empleados-------" << endl;
+			cout << "1. Ver Empleados" << endl;
+			cout << "2. Contratar Empleados" << endl;
+			cout << "3. Despedir Empleados" << endl;
+			cout << "4. Salir" << endl;
+			cout << ">>> "; cin >> tap;
+			switch (tap)
+			{
+			case 1:
+				a.VerEmpleados();
+				system("PAUSE");
+				break;
+			case 2:{
+				string nombre, nivel;
+				float saldo;
+				cout << "Nombre del empleado a contratar: "; cin >>  nombre;
+				cout << "Nivel del contrato del empleado a contratar: "; cin >>  nivel;
+				cout << "Sueldo que tendra el empleado a contratar: "; cin >>  saldo;
+				Empleado e(nombre, nivel, saldo);
+				a.AsignarEmpleado(e);
+				}
+				break;
+			case 3:{
+				system("cls");
+				int e;
+				a.VerEmpleados();
+				cout << "Indice del empleado a despedir: "; cin >>  e;
+				a.DespedirEmpleado(e);
+				}
+				break;
+			case 4:
+				break;	
+			default:
+				cout << "Eliga una opcion disponible [1-4]" << endl;
+				system("PAUSE");
+				break;
+			}
+
+		} 
 			break;
 		case 3:
 			system("cls");
@@ -557,14 +620,38 @@ void menu(Tienda &a){
 		case 4:
 			break;
 		default:
-			cout << "Elegir una opcion disponible [1-6]" << endl;
+			cout << "Elegir una opcion disponible [1-4]" << endl;
 			system("PAUSE");
 			break;
 		}
 	} while (opc != 4);
 	ofstream archiv2;
-	archiv2.open("inventario.txt", ios::app);
+	vector<Inventario> Inventarios = a.getInventarios();
+	archiv2.open("inventario.txt");
+	for (int i = 0; i < Inventarios.size(); i++)
+	{
+		archiv2 << "Inventario "<< i << " " << Inventarios[i].getFecha() << " " <<Inventarios[i].getProductos().size() << endl; 
+		for (int j = 0; j < Inventarios[i].getProductos().size(); j++){
+			archiv2 << (Inventarios[i]).getProductos()[j].getTipo() << " ";
+			archiv2 << (Inventarios[i]).getProductos()[j].getCantidad() << " ";
+			archiv2 << (Inventarios[i]).getProductos()[j].getPrecio() << " ";
+			archiv2 << (Inventarios[i]).getProductos()[j].getGanancia() << " ";
+			archiv2 << (Inventarios[i]).getProductos()[j].getNombre() << " ";
+			archiv2 << endl;
+		}
+	}
 	archiv2<<"x";
+	archiv2.close();
+	vector<Empleado> Empleados = a.getEmpleados();
+	archiv2.open("inventario.txt");
+			for (int i = 0; i < Empleados.size(); i++){
+			archiv2 << (Empleados[i]).getNivel() << " ";
+			archiv2 << (Empleados[i]).getSueldo() << " ";
+			archiv2 << (Empleados[i]).getNombre() << " ";
+			archiv2 << endl;
+		}
+	archiv2<<"x";
+	archiv2.close();
 }
 
 int main(){
@@ -602,7 +689,7 @@ int main(){
 		bool leer = true;
 		while(leer){
 			archiv2>>temp;
-			if (!(temp == "x")){
+			if (!(temp == "x" || archiv2.eof())){
 				Inventario e;
 				int indice;
 				string fecha;
@@ -610,7 +697,6 @@ int main(){
 				archiv2>>indice>>fecha>>cantidad;
 				e.setFecha(fecha);
 				vector<Producto> Lector_P;
-				system("PAUSE");
 				for (int i = 0; i < cantidad ; i ++){
 					Producto a;
 					string tipo;
@@ -640,6 +726,26 @@ int main(){
 			Lector.push_back(a);
 		}
 		tienda1.setInventarios(Lector);
+		archiv2.close();
+		archiv2.open("empleados.txt");
+		vector <Empleado> Empleados;
+		bool lee = true;
+		while (lee){
+			if (!(temp == "x" || archiv2.eof())){
+				string nombre, nivel;
+				float sueldo;
+				char c;
+				archiv2 >> nivel >> sueldo;
+				archiv2.get(c);
+				getline(archiv2, nombre);
+				Empleado e(nombre, nivel, sueldo);
+				
+			} else{
+				lee = false;
+			}
+		}
+		
+		
 		menu(tienda1);
 	}
 	return 0;
