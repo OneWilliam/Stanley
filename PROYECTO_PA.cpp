@@ -467,10 +467,11 @@ void menu(Tienda &a){
 					cout<< "--------Productos--------"<<endl; 
 					cout<< "1. Ver Productos" << endl;
 					cout<< "2. Agregar Nuevo Producto" << endl;
-					cout<< "3. Quitar Producto" << endl;
-					cout<< "4. Ordenar Productos" << endl;
-					cout<< "5. Buscar Productos" << endl;
-					cout<< "6. Salir" << endl;
+					cout<< "3. Agregar Producto" << endl;
+					cout<< "4. Quitar Producto" << endl;
+					cout<< "5. Ordenar Productos" << endl;
+					cout<< "6. Buscar Productos" << endl;
+					cout<< "7. Salir" << endl;
 					cout<<endl<<">>> ";
 					cin >> opc;
 					switch (opc){
@@ -497,6 +498,18 @@ void menu(Tienda &a){
 							system("\nPAUSE");
 							break;
 						case 3:
+							{
+							Inventario Cambio = a.getInventarios().back();
+							string nom; int cant;
+						 	Cambio.VerTodo();
+						 	cout << "A que producto desea agregarle: ";
+						 	getline(cin >> ws, nom);
+						 	cout << "Que cantidades del producto desea agregar: ";
+						 	cin >> cant;
+							Cambio.AgregarProducto(nom, cant);
+							a.setInventarioActual(Cambio);
+							}
+						case 4:
 						{
 							Inventario Cambio = a.getInventarios().back();
 							string nom; int cant;
@@ -510,7 +523,7 @@ void menu(Tienda &a){
 						}
 							system("\nPAUSE");
 							break;
-						case 4:{
+						case 5:{
 							int criterio;
 							DE0:
 							system("cls");
@@ -551,7 +564,7 @@ void menu(Tienda &a){
 							opc = 0;
 							system("\nPAUSE");
 							break;
-						case 5:{
+						case 6:{
 							int criterio, l; 
 							string c;
 							DE1:
