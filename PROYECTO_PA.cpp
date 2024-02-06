@@ -336,7 +336,8 @@ void Tienda::VerHistInventarios(){
 	for (int i = Inventarios.size()-1; i > -1; i--)
 	{
 		contador++;
-		cout << contador << ". Inventario " << left <<setw(20) << Inventarios[i].getFecha();
+		cout << contador << ". Inventario " << left <<setw(20) << Inventarios[i].getFecha()<<endl;
+		Inventarios[i].VerTodo();
 		cout << endl;
 	}
 }
