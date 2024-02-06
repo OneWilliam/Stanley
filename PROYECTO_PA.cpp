@@ -371,21 +371,45 @@ void editarInventario(Tienda &a, T &e){
 	a.setInventarios(nuevo);
 }
 
-void Ordenador (int a, vector<Producto> &e){																										
-	string k;
+void Ordenador (int a, vector<Producto> &e){
 	Producto aux;
-	if(a == 1) k = "nombre";
-	else if(a == 2) k = "tipo";
-	else if(a == 3) k = "cantidad";
-	else if(a == 4) k = "precio";
-	else if(a == 5) k = "ganancia";
 	for (int i = 1; i < e.size(); i++){
-		for (int j = 1; j < e.size() - i; j++){
-			if (e[j-1].get(k) > e[j].get(k)){
-				aux = e[j];
-				e[j] = e[j-1];
-				e[j-1] = aux; 
+		for (int j = 1; j <= e.size() - i; j++){
+			if(a == 1) {
+				if (e[j-1].getNombre() > e[j].getNombre()){
+					aux = e[j];
+					e[j] = e[j-1];
+					e[j-1] = aux; 
+				}
 			}
+			else if(a == 2) {
+				if (e[j-1].getTipo() > e[j].getTipo()){
+					aux = e[j];
+					e[j] = e[j-1];
+					e[j-1] = aux; 
+				}
+				}
+			else if(a == 3) {
+				if (e[j-1].getCantidad() > e[j].getCantidad()){
+					aux = e[j];
+					e[j] = e[j-1];
+					e[j-1] = aux; 
+				}
+				}
+			else if(a == 4) {
+				if (e[j-1].getPrecio() > e[j].getPrecio()){
+					aux = e[j];
+					e[j] = e[j-1];
+					e[j-1] = aux; 
+				}
+				}
+			else if(a == 5) {
+				if (e[j-1].getGanancia() > e[j].getGanancia()){
+					aux = e[j];
+					e[j] = e[j-1];
+					e[j-1] = aux; 
+				}
+				}
 		}
 	}
 }
@@ -586,7 +610,7 @@ void menu(Tienda &a){
 			case 2:{
 				string nombre, nivel;
 				float saldo;
-				cout << "Nombre del empleado a contratar: "; cin >>  nombre;
+				cout << "Nombre del empleado a contratar: "; getline(cin>>ws, nombre);
 				cout << "Nivel del contrato del empleado a contratar: "; cin >>  nivel;
 				cout << "Sueldo que tendra el empleado a contratar: "; cin >>  saldo;
 				Empleado e(nombre, nivel, saldo);
@@ -643,8 +667,8 @@ void menu(Tienda &a){
 	archiv2<<"x";
 	archiv2.close();
 	vector<Empleado> Empleados = a.getEmpleados();
-	archiv2.open("inventario.txt");
-			for (int i = 0; i < Empleados.size(); i++){
+	archiv2.open("empleados.txt");
+		for (int i = 0; i < Empleados.size(); i++){
 			archiv2 << (Empleados[i]).getNivel() << " ";
 			archiv2 << (Empleados[i]).getSueldo() << " ";
 			archiv2 << (Empleados[i]).getNombre() << " ";
@@ -739,13 +763,12 @@ int main(){
 				archiv2.get(c);
 				getline(archiv2, nombre);
 				Empleado e(nombre, nivel, sueldo);
-				
+				Empleados.push_back(e);
 			} else{
 				lee = false;
 			}
 		}
-		
-		
+		tienda1.setEmpleados(Empleados);
 		menu(tienda1);
 	}
 	return 0;
